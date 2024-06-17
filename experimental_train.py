@@ -212,9 +212,9 @@ def main():
     print(f"Loaded {len(clean_fnames)} image names")
 
     # Load Labels
-    path_combinacion = './Datasets/Zernikes/Zernikes_combinacion/Zernikes_coef_combinacion.json'
-    path_puros = './Datasets/Zernikes/Zernikes_puros/Zernikes_coef_puros.json'
-    path_random = './Datasets/Zernikes/Zernikes_random/Zernikes_coef_random.json'
+    path_combinacion = './Datasets/Zernikes/Json/Zernikes_coef_combinacion.json'
+    path_puros = './Datasets/Zernikes/Json/Zernikes_coef_puros.json'
+    path_random = './Datasets/Zernikes/Json/Zernikes_coef_random.json'
     mega_json = {}
     json_to_dict(path_combinacion, mega_json)
     json_to_dict(path_puros, mega_json)
