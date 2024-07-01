@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from utils import normaliza_pos
 import matplotlib.pyplot as plt
+from zernike import RZern
 
 
 def GeneradorZ(cart, num_samples=50000, num_coef=10, h=256, w=256):
@@ -79,7 +80,7 @@ def zernike2gradient(coef):
     dx, dy = tf.image.image_gradients(Phi)
     return dx, dy
 
-def generate_images(models, test_input, tar):
+def generate_images(models, test_input, tar, cart): #JV
 
     encoder = models[0]
     decoder = models[1]
@@ -90,12 +91,12 @@ def generate_images(models, test_input, tar):
     zernikes = zernike_decoder(encoded_image, training=True)
 
     generated_zernike = np.nan_to_num(
-        generate_zernike(zernikes[0].numpy(), normalize=False), 
+        generate_zernike(zernikes[0].numpy(), cart, normalize=False), #JV 
         nan=0
     )
     
     got = np.nan_to_num(
-        generate_zernike(tar[0].numpy(), normalize=False),
+        generate_zernike(tar[0].numpy(), cart, normalize=False), #JV
         nan=0
     )
     error = np.abs(got - generated_zernike)
@@ -118,7 +119,7 @@ def generate_images(models, test_input, tar):
         plt.imshow(display_list[i])
         plt.colorbar(fraction=0.046)
         plt.axis('off')
-    plt.show()
+    #plt.show()
 
 def generate_images_exp(models, test_input, tar, save=False):
 
@@ -170,4 +171,4 @@ def generate_images_exp(models, test_input, tar, save=False):
         plt.axis('off')
     if save:
         plt.savefig('./images/test_result.png', bbox_inches='tight')
-    plt.show()
+    #plt.show()

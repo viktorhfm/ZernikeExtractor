@@ -238,6 +238,7 @@ def fit_ae(
         encoder,
         decoder,
         zernike_decoder,
+        cart, #JV
         autoencoder_optimizer
 ):
 
@@ -271,11 +272,12 @@ def fit_ae(
         display.clear_output(wait=True)
         generate_images([encoder, decoder, zernike_decoder], 
                         example_input, 
-                        example_target)
+                        example_target,
+                        cart) #JV
         
         record['autoencoder_loss'].append(autoencoder_loss.numpy())
         record['validation_loss'].append(validation_loss.numpy())
-        plot_graphs_ae(record, epoch + 1)
+        #plot_graphs_ae(record, epoch + 1)
 
         print("Time taken: ", time.time() - start)
         print("Autoencoder Loss: ", autoencoder_loss.numpy())
@@ -375,7 +377,7 @@ def fit_zae(
         delta_time = time.time() - start
         record['time'].append(delta_time)
 
-        plot_graphs_zae(record, epoch + 1)
+        #plot_graphs_zae(record, epoch + 1)
 
         print("Time taken: ", delta_time)
         print("Zernike Decoder Loss: ", zernike_decoder_loss[0].numpy())
@@ -460,6 +462,7 @@ def main():
                     encoder=encoder,
                     decoder=decoder,
                     zernike_decoder=zernike_decoder,
+                    cart=cart, #JV
                     autoencoder_optimizer=autoencoder_optimizer)
     
     EPOCHS = 150
