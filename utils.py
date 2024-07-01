@@ -31,7 +31,8 @@ def plot_graphs_ae(record, epoch):
     ax1.tick_params(axis='y')
 
     fig.tight_layout()
-    plt.show()
+    plt.savefig('train_ae.png', bbox_inches='tight')
+    #plt.show()
 
 
 def plot_graphs_zae(record, epoch):
@@ -50,7 +51,8 @@ def plot_graphs_zae(record, epoch):
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout()
-    plt.show()
+    #plt.show()
+    plt.savefig('train_zae.png', bbox_inches='tight')
 
 def json_to_dict(path, destination_dict):
     loaded_dict = json.load(open(path, 'r'))

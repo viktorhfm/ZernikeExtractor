@@ -277,7 +277,7 @@ def fit_ae(
         
         record['autoencoder_loss'].append(autoencoder_loss.numpy())
         record['validation_loss'].append(validation_loss.numpy())
-        #plot_graphs_ae(record, epoch + 1)
+        plot_graphs_ae(record, epoch + 1)
 
         print("Time taken: ", time.time() - start)
         print("Autoencoder Loss: ", autoencoder_loss.numpy())
@@ -292,15 +292,17 @@ def train_step_zae(
     target,
     encoder,
     zernike_decoder,
-    zernike_decoder_optimizer
-):
+    zernike_decoder_optimizer,
+    cart
+): #JV
     with tf.GradientTape() as zernike_decoder_tape:
         encoded_image = encoder(input_image)
         zernikes = zernike_decoder(encoded_image, training=True)
 
+        print("JV2",cart)
         # Loss calculation
         zernike_decoder_loss = zernike_loss(target, zernikes)
-        estimated_phase_loss = phase_loss(target, zernikes)
+        estimated_phase_loss = phase_loss(target, zernikes, cart) #JV
         estimated_grad_loss =  grad_loss(target, zernikes)
 
         # Total loss
@@ -331,8 +333,11 @@ def fit_zae(
     encoder,
     decoder,
     zernike_decoder,
-    zernike_decoder_optimizer
+    zernike_decoder_optimizer,
+    cart
 ):
+
+                     
     tf.compat.v1.enable_eager_execution()
 
     record = {
@@ -345,6 +350,7 @@ def fit_zae(
 
     example_input, example_target = next(iter(test_ds.take(1)))
     
+    print("JV3",cart)
     for epoch in range(epochs):
 
         start = time.time()
@@ -356,7 +362,8 @@ def fit_zae(
                                                   target,
                                                   encoder,
                                                   zernike_decoder,
-                                                  zernike_decoder_optimizer)
+                                                  zernike_decoder_optimizer,
+                                                  cart) #JV
             if n % 10 == 0:
                 print('··', end='')
             n += 1
@@ -364,7 +371,8 @@ def fit_zae(
         display.clear_output(wait=True)
         generate_images([encoder, decoder, zernike_decoder], 
                         example_input, 
-                        example_target)
+                        example_target,
+                        cart) #JV
         
         record['zernike_decoder_loss'].append(zernike_decoder_loss[0].numpy())
         record['estimated_phase_loss'].append(zernike_decoder_loss[1].numpy())
@@ -377,7 +385,7 @@ def fit_zae(
         delta_time = time.time() - start
         record['time'].append(delta_time)
 
-        #plot_graphs_zae(record, epoch + 1)
+        plot_graphs_zae(record, epoch + 1)
 
         print("Time taken: ", delta_time)
         print("Zernike Decoder Loss: ", zernike_decoder_loss[0].numpy())
@@ -447,7 +455,8 @@ def main():
 
     # Define the optimizer and the training params
 
-    EPOCHS = 100
+    #EPOCHS = 100
+    EPOCHS = 1
     validation_split = 0.1
     num_samples = len(train_dataset)
     num_train = round(num_samples * (1 - validation_split))
@@ -465,14 +474,17 @@ def main():
                     cart=cart, #JV
                     autoencoder_optimizer=autoencoder_optimizer)
     
+    
+    print("JV4",cart)   
     EPOCHS = 150
-    record_zae = fit_zae(train_dataset=train_ds, 
-                     test_dataset=test_dataset, 
+    record_zae = fit_zae(train_ds=train_ds, 
+                     test_ds=test_dataset, 
                      epochs=EPOCHS,
                      encoder=encoder,
                      decoder=decoder,
                      zernike_decoder=zernike_decoder,
-                     zernike_decoder_optimizer=zernike_decoder_optimizer)
+                     zernike_decoder_optimizer=zernike_decoder_optimizer,
+                     cart=cart) #JV
     print("Zernike total loss: ", record_zae['total_zernike_decoder_loss'][-1])
     print("Estimated Phase Loss: ", record_zae['estimated_phase_loss'][-1])
     print("Estimated Gradient Loss: ", record_zae['estimated_grad_loss'][-1])

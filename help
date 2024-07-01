@@ -1,0 +1,14 @@
+
+#conda remove --name zernike --all
+
+conda create --name zernike python=3.10
+conda activate zernike
+pip install -r requirements.txt
+
+python3 -m pip install tensorflow[and-cuda]
+
+# Verify the installation:
+python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+
+python3 synthetic_train.py 

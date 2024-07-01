@@ -43,32 +43,34 @@ def GeneradorZ_sparse(cart, num_samples=50000, num_coef=10, h=256, w=256):
     return X, y, Xcos
 
 def generate_zernike(coef, cart, normalize=True):
+    print("JV0",cart)
     Phi = cart.eval_grid(coef, matrix=True)
     if normalize:
         Phi = normaliza_pos(Phi)
     return Phi
 
-def zernike2phi(coef):
+def zernike2phi(coef, cart): #JV
+    print("JV1",cart)
     # Phi = tf.map_fn(generate_zernike, coef)
     Phi = tf.map_fn(
-        lambda x: generate_zernike(x, normalize=False),
+        lambda x: generate_zernike(x, cart=cart, normalize=False),
         coef
     )
     B = np.nan_to_num(Phi, nan=0)
     return B
 
-def zernike2cos(coef):
+def zernike2cos(coef, cart=None): #JV
     Phi = tf.map_fn(
-        lambda x: generate_zernike(x, normalize=False),
+        lambda x: generate_zernike(x, cart=cart, normalize=False), #JV
         coef
     )
     Phi = tf.math.cos(Phi)
     B = np.nan_to_num(Phi, nan=0)
     return B
 
-def zernike2gradient(coef):
+def zernike2gradient(coef, cart=None): #JV
     Phi = tf.map_fn(
-        lambda x: generate_zernike(x, normalize=False),
+        lambda x: generate_zernike(x, cart=cart, normalize=False), #JV
         coef
     )
     Phi = tf.convert_to_tensor(
@@ -113,13 +115,16 @@ def generate_images(models, test_input, tar, cart): #JV
     ]
     
     for i in range(5):
+        #pass
         plt.subplot(1, 5, i+1)
         plt.title(title[i])
         # Getting the pixel values in the [0, 1] range to plot.
         plt.imshow(display_list[i])
         plt.colorbar(fraction=0.046)
         plt.axis('off')
-    #plt.show()
+        plt.savefig('test_result_simul.png', bbox_inches='tight')
+        #plt.close(fig)
+    	#plt.show()
 
 def generate_images_exp(models, test_input, tar, save=False):
 
@@ -163,12 +168,13 @@ def generate_images_exp(models, test_input, tar, save=False):
     ]
     
     for i in range(5):
+        #pass
         plt.subplot(1, 5, i+1)
         plt.title(title[i], fontdict={'fontsize': 20}, y=-0.15)
         # Getting the pixel values in the [0, 1] range to plot.
         plt.imshow(display_list[i])
         plt.colorbar(fraction=0.046)
         plt.axis('off')
-    if save:
-        plt.savefig('./images/test_result.png', bbox_inches='tight')
-    #plt.show()
+        plt.savefig('test_result_exp.png', bbox_inches='tight')
+        #plt.close(fig)
+    	#plt.show()

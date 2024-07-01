@@ -17,9 +17,10 @@ def cos_loss(y_true, y_pred):
     hat_phi = zernike2cos(y_pred)
     return LAMBDA * loss_object_phase(phi, hat_phi)
 
-def phase_loss(y_true, y_pred):
-    phi = zernike2phi(y_true)
-    hat_phi = zernike2phi(y_pred)
+def phase_loss(y_true, y_pred,cart): #JV
+    print("JV2",cart)
+    phi = zernike2phi(y_true, cart) #JV
+    hat_phi = zernike2phi(y_pred,cart) #JV
     return ALPHA * loss_object_phase(phi, hat_phi)
 
 def grad_loss(y_true, y_pred):
