@@ -338,7 +338,7 @@ def fit_zae(
 ):
 
                      
-    tf.compat.v1.enable_eager_execution()
+    #tf.compat.v1.enable_eager_execution()
 
     record = {
         'zernike_decoder_loss': [],
@@ -401,6 +401,7 @@ def fit_zae(
 
 def main():
     # Create the Zernike object and parameters
+    tf.experimental.numpy.experimental_enable_numpy_behavior()
     HEIGHT = 256
     WIDTH = 256
     cart = RZern(2)
@@ -476,7 +477,7 @@ def main():
     
     
     print("JV4",cart)   
-    EPOCHS = 150
+    EPOCHS = 1
     record_zae = fit_zae(train_ds=train_ds, 
                      test_ds=test_dataset, 
                      epochs=EPOCHS,
@@ -500,17 +501,17 @@ def main():
     tf.config.run_functions_eagerly(True)
     zautoencoder = tf.keras.models.Model(
         inputs=encoder.inputs, 
-        outputs=zernike_decoder(encoder.outputs)
+        outputs=zernike_decoder(encoder.outputs),
     )
     zautoencoder.compile(optimizer=zernike_decoder_optimizer, 
                         loss=total_zernike_loss)
     zautoencoder.evaluate(X_test_cos, y_test)
 
     # Save the records
-    with open('./records/ae_synthetic.pkl', 'wb') as f:
-        pickle.dump(record_ae, f)
-    with open('./records/zae_synthetic.pkl', 'wb') as f:
-        pickle.dump(record_zae, f)
+    # with open('./records/ae_synthetic.pkl', 'wb') as f:
+        # pickle.dump(record_ae, f)
+    # with open('./records/zae_synthetic.pkl', 'wb') as f:
+        # pickle.dump(record_zae, f)
 
 if __name__ == '__main__':
     main()
