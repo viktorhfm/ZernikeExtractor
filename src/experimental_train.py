@@ -3,7 +3,7 @@ from IPython import display
 from loss_functions import *
 from sklearn.utils import shuffle
 from tensorflow.python.ops.numpy_ops import np_config
-from utils import *
+from src.utils import *
 from zernike import RZern
 import cv2
 import matplotlib.pyplot as plt

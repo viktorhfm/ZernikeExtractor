@@ -1,4 +1,4 @@
-from utils import *
+from src.utils import *
 from loss_functions import *
 from tensorflow.python.ops.numpy_ops import np_config
 

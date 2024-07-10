@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import tensorflow as tf
-from utils import normaliza_pos
+from src.utils import normaliza_pos
 import matplotlib.pyplot as plt
 from zernike import RZern
 
